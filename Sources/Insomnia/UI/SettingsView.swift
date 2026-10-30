@@ -222,6 +222,10 @@ struct SettingsView: View {
             Text("Writes NSAppSleepDisabled = YES into each listed app's preferences when a session starts and puts the previous value back when it ends.")
                 .font(.callout)
                 .foregroundStyle(.secondary)
+            Toggle("Start a session automatically while an agent app is running", isOn: bind(\.autoHoldWhileAgentsRun))
+            Text("Keeps the Mac reachable with the lid closed for as long as one of the apps above is running, then ends the session when they all quit. The battery floor, thermal rules and timer still apply, so this does not pin the Mac awake for good.")
+                .font(.callout)
+                .foregroundStyle(.secondary)
         } header: {
             Text("Agent apps")
         } footer: {

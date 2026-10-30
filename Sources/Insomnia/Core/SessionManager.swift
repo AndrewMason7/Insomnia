@@ -4,6 +4,7 @@ import Observation
 enum EndReason: String, Sendable {
     case timer
     case user
+    case agentsGone
     case quit
     case batteryFloor
     /// Battery present but its level unreadable on two consecutive reads
@@ -3195,6 +3196,7 @@ final class SessionManager {
         switch reason {
         case .timer: "Time is up. Sleep is back to normal."
         case .user: "Ended by you. Sleep is back to normal."
+        case .agentsGone: "No agent app is running. Sleep is back to normal."
         case .quit: "Insomnia quit. Sleep is back to normal."
         case .batteryFloor: "Battery fell below \(config.endFloor)%. Sleep is back to normal."
         case .batteryUnreadable: "The battery level could not be read twice in a row, so the \(config.endFloor)% floor could not be applied. Sleep is back to normal."

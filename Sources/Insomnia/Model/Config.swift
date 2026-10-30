@@ -50,6 +50,12 @@ struct Config: Codable, Equatable, Sendable {
     /// preferences.
     var disableAppNapForAgents: Bool = false
 
+    /// Start an awake session automatically while any bundle id in
+    /// `agentList` is running, and end it when none is. A closed lid then
+    /// stays reachable (SSH, Tailscale, a sync) without pinning the Mac
+    /// awake for good: the battery, thermal and timer rules still apply.
+    var autoHoldWhileAgentsRun: Bool = false
+
     // Battery / thermal floors
     /// Battery percentage below which Low Power Mode is switched on.
     var lowPowerFloor: Int = 40
@@ -162,6 +168,7 @@ struct Config: Codable, Equatable, Sendable {
         lowPowerOnLidClose = try c.decodeIfPresent(Bool.self, forKey: .lowPowerOnLidClose) ?? d.lowPowerOnLidClose
         agentList = try c.decodeIfPresent([String].self, forKey: .agentList) ?? d.agentList
         disableAppNapForAgents = try c.decodeIfPresent(Bool.self, forKey: .disableAppNapForAgents) ?? d.disableAppNapForAgents
+        autoHoldWhileAgentsRun = try c.decodeIfPresent(Bool.self, forKey: .autoHoldWhileAgentsRun) ?? d.autoHoldWhileAgentsRun
         lowPowerFloor = try c.decodeIfPresent(Int.self, forKey: .lowPowerFloor) ?? d.lowPowerFloor
         endFloor = try c.decodeIfPresent(Int.self, forKey: .endFloor) ?? d.endFloor
         thermalRules = try c.decodeIfPresent(Bool.self, forKey: .thermalRules) ?? d.thermalRules

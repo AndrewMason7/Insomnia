@@ -26,11 +26,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     let releases = ReleaseChecker()
     private var statusItem: StatusItemController?
     private var settingsWindow: SettingsWindow?
+    let autoHold: AgentAutoHold
     private var terminating = false
 
     override init() {
         let manager = SessionManager.live()
         self.manager = manager
+        autoHold = AgentAutoHold(manager: manager)
         secrets = KeychainHotspotSecretStore(keychain: KeychainStore()) {
             manager.config.hotspotSSID
         }
@@ -86,7 +88,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         statusItem = StatusItemController(manager: manager, status: status) { [weak settings] in
             settings?.show()
         }
-        Task { await manager.reconcile() }
+        autoHold.start()
+        Task {
+            await manager.reconcile()
+            await autoHold.evaluate()
+        }
     }
 
     /// Quitting always ends the session (spec 1). Terminate is deferred until
